@@ -9,6 +9,9 @@ namespace BusinessLayer
     /// </summary>
     public class ServiceCompte
     {
+        // La colonne solde est un numeric(10,2)
+        private const double SoldeMaximum = 100000000;
+
         private readonly DataAccess dataAccess = new DataAccess();
 
         /// <summary>
@@ -79,6 +82,38 @@ namespace BusinessLayer
 
             compteDebit.Solde -= montant;
             compteCredit.Solde += montant;
+        }
+
+        /// <summary>
+        /// Ajoute un nouveau compte bancaire dans la base de données
+        /// </summary>
+        /// <param name="compte">Compte à créer</param>
+        /// <exception cref="ArgumentException">Numéro ou solde invalide, ou compte déjà existant</exception>
+        public void AjouterCompte(Compte compte)
+        {
+            if (compte.IdCompte <= 0)
+            {
+                throw new ArgumentException("Le numéro de compte doit être strictement positif.");
+            }
+            if (!double.IsFinite(compte.Solde) || compte.Solde < 0 || compte.Solde >= SoldeMaximum)
+            {
+                throw new ArgumentException("Le solde du compte doit être compris entre 0 et 99 999 999,99.");
+            }
+
+            // COUNT renvoie toujours une ligne, sinon GetData lèverait une exception
+            DataTable? dataTable = this.dataAccess.GetData("SELECT COUNT(*) FROM vComptes WHERE idcompte = " + compte.IdCompte);
+            if (Convert.ToInt32(dataTable!.Rows[0][0]) > 0)
+            {
+                throw new ArgumentException($"Le compte {compte.IdCompte} existe déjà.");
+            }
+
+            string query = string.Format(CultureInfo.InvariantCulture,
+                "INSERT INTO compte (idcompte, solde) VALUES ({0}, {1})", compte.IdCompte, compte.Solde);
+            int nbLignes = this.dataAccess.SetData(query);
+            if (nbLignes != 1)
+            {
+                throw new DataBaseException($"Erreur de base de données. Le compte {compte.IdCompte} n'a pas été créé.");
+            }
         }
 
         /// <summary>

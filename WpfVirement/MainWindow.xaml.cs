@@ -64,6 +64,11 @@ namespace WpfVirement
             this.InitializeComponent();
             this.DataContext = this;
 
+            this.ChargerComptes();
+        }
+
+        private void ChargerComptes()
+        {
             try
             {
                 List<Compte>? liste = this.serviceCompte.GetAllComptes();
@@ -72,6 +77,20 @@ namespace WpfVirement
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// Ouvre la fenêtre d'ajout de compte puis recharge les comptes si besoin
+        /// </summary>
+        private void AjouterCompte_Button_Click(object sender, RoutedEventArgs e)
+        {
+            AjoutCompte fenetre = new AjoutCompte { Owner = this };
+            fenetre.ShowDialog();
+
+            if (fenetre.CompteCree)
+            {
+                this.ChargerComptes();
             }
         }
 

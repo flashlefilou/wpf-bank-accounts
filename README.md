@@ -6,6 +6,7 @@ Application de gestion de comptes bancaires en C# / WPF avec une base de donnée
 
 - Dépôt et retrait sur un compte (`WpfComptesBancaires`)
 - Virement entre deux comptes, enregistré dans un historique (`WpfVirement`)
+- Création d'un compte bancaire depuis la fenêtre de virement
 - Pas de découvert autorisé : un retrait ou un virement supérieur au solde est refusé
 
 ## Architecture

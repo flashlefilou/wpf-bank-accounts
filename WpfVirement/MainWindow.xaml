@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfVirement"
         mc:Ignorable="d"
-        Title="Virement" Height="350" Width="700">
+        Title="Virement" Height="420" Width="700">
     <Grid Margin="20">
         <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
@@ -34,5 +35,7 @@
 
         <Button x:Name="Valider_Button" Grid.Row="3" Grid.Column="0" Margin="10" Content="Valider" Click="Valider_Button_Click"/>
         <Button x:Name="Annuler_Button" Grid.Row="3" Grid.Column="1" Margin="10" Content="Annuler" Click="Annuler_Button_Click"/>
+
+        <Button x:Name="AjouterCompte_Button" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="10" Content="Ajouter un compte" Click="AjouterCompte_Button_Click"/>
     </Grid>
 </Window>
