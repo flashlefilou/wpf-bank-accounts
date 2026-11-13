@@ -36,6 +36,7 @@
         <Button x:Name="Valider_Button" Grid.Row="3" Grid.Column="0" Margin="10" Content="Valider" Click="Valider_Button_Click"/>
         <Button x:Name="Annuler_Button" Grid.Row="3" Grid.Column="1" Margin="10" Content="Annuler" Click="Annuler_Button_Click"/>
 
-        <Button x:Name="AjouterCompte_Button" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="10" Content="Ajouter un compte" Click="AjouterCompte_Button_Click"/>
+        <Button x:Name="AjouterCompte_Button" Grid.Row="4" Grid.Column="0" Margin="10" Content="Ajouter un compte" Click="AjouterCompte_Button_Click"/>
+        <Button x:Name="RechercherVirements_Button" Grid.Row="4" Grid.Column="1" Margin="10" Content="Rechercher des virements" Click="RechercherVirements_Button_Click"/>
     </Grid>
 </Window>

@@ -117,6 +117,62 @@ namespace BusinessLayer
         }
 
         /// <summary>
+        /// Recherche les virements, avec un filtre facultatif sur un compte et sur une date
+        /// </summary>
+        /// <param name="compte">Compte recherché, null pour tous les comptes</param>
+        /// <param name="date">Date du virement, null pour toutes les dates</param>
+        /// <param name="sens">Cherche le compte en débit, en crédit ou dans les deux</param>
+        /// <returns>Liste des virements trouvés</returns>
+        public List<Virement> RechercherVirements(Compte? compte, DateTime? date, SensVirement sens)
+        {
+            List<string> conditions = new List<string>();
+
+            if (compte != null)
+            {
+                switch (sens)
+                {
+                    case SensVirement.Debit:
+                        conditions.Add("idcomptedebit = " + compte.IdCompte);
+                        break;
+                    case SensVirement.Credit:
+                        conditions.Add("idcomptecredit = " + compte.IdCompte);
+                        break;
+                    default:
+                        conditions.Add($"(idcomptedebit = {compte.IdCompte} OR idcomptecredit = {compte.IdCompte})");
+                        break;
+                }
+            }
+            if (date != null)
+            {
+                conditions.Add("datetransaction = '" + date.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) + "'");
+            }
+
+            string filtre = conditions.Count > 0 ? " WHERE " + string.Join(" AND ", conditions) : string.Empty;
+            List<Virement> virements = new List<Virement>();
+
+            // GetData lève une exception quand il n'y a aucune ligne, donc on compte d'abord
+            DataTable? compteur = this.dataAccess.GetData("SELECT COUNT(*) FROM virement" + filtre);
+            if (Convert.ToInt32(compteur!.Rows[0][0]) == 0)
+            {
+                return virements;
+            }
+
+            DataTable? dataTable = this.dataAccess.GetData(
+                "SELECT idtransaction, datetransaction, idcomptedebit, idcomptecredit, montant FROM virement" + filtre + " ORDER BY idtransaction");
+            foreach (DataRow row in dataTable!.Rows)
+            {
+                virements.Add(new Virement(
+                    Convert.ToInt32(row["idtransaction"]),
+                    Convert.ToDateTime(row["datetransaction"]),
+                    Convert.ToInt32(row["idcomptedebit"]),
+                    Convert.ToInt32(row["idcomptecredit"]),
+                    Convert.ToDouble(row["montant"])));
+            }
+
+            return virements;
+        }
+
+        /// <summary>
         /// Vérifie que le solde en base du compte permet le débit (pas de découvert autorisé)
         /// </summary>
         private void VerifierSolde(Compte compte, double montantDebit)

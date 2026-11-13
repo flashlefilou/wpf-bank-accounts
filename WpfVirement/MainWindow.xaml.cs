@@ -94,6 +94,12 @@ namespace WpfVirement
             }
         }
 
+        private void RechercherVirements_Button_Click(object sender, RoutedEventArgs e)
+        {
+            RechercheVirements fenetre = new RechercheVirements { Owner = this };
+            fenetre.ShowDialog();
+        }
+
         /// <summary>
         /// Effectue le virement du compte à débiter vers le compte à créditer
         /// </summary>
